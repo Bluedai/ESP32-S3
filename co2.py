@@ -1,3 +1,5 @@
+# Dieses Skript fragt einen lokalen Grafana Server ab und gibt die letzten 30 Minuten CO2 Werte aus
+
 import wlan
 import time
 import urequests
@@ -6,16 +8,14 @@ import urequests
 now = time.time()
 now = int(now)
 now = (now + 946677638) * 1000  
-# now = str(now)
 
 # Unixtime (seit 1970 ) vor X Minuten ermitteln 
 Minuten = 30
 before = time.time() - (Minuten * 60)
 before = int(before)
 before = (before + 946677638) * 1000
-before = str(before)
 
-
+# Grafana Server abfragen
 url = 'http://192.168.178.32:2090/api/ds/query'
 headers = {}
 data = {
@@ -37,3 +37,6 @@ data = {
 response = urequests.post(url,headers=headers, json=data)
 response.encoding = 'utf-8'
 print(response.content)
+
+# WLAN Verbindung trennen
+wlan.disconnect()
