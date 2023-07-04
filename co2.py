@@ -92,7 +92,7 @@ def daten_darstellen(data_array):
 
 while True:
     # Zeiten ermitteln 
-    now,before = unixtime_ermitteln(150)
+    now,before = unixtime_ermitteln(110)
 
     # API abfragen
     data_array = grafana_read(before,now)
@@ -102,4 +102,3 @@ while True:
     
     # Warten
     time.sleep(30)
-
