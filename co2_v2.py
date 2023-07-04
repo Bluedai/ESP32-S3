@@ -4,6 +4,9 @@ import wlan
 import time
 import urequests
 
+# WLAN Verbinden
+wlan.connect_to_wifi()
+
 # Aktuelle Unixtime (seit 1970) in Millisekunden ermitteln
 now = time.time()
 now = int(now)

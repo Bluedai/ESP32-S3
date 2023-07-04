@@ -19,6 +19,3 @@ def connect_to_wifi():
 def disconnect():
     global station
     station.disconnect()
-
-
-    # Gittest
