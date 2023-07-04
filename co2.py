@@ -30,22 +30,22 @@ display.show()
 # Rufe die aktuelle Zeit ab
 ntptime.settime()
 current_time = time.localtime()
-print("Aktuelle Uhrzeit:", current_time)
 
-# Unixtime seit 1970 in Millisekunden ermitteln 
+# Unixtime seit 1970 in Millisekunden ermitteln UTC + 2 Stunden
 def unixtime_ermitteln(Minuten):
     # Aktuelle Unixtime
-    now = time.time()
+    now = time.time() + 7200
     now = int(now)
     now = (now + 946677638) * 1000  
 
     # Unixtime vor X Minuten ermitteln 
-    before = time.time() - (Minuten * 60)
+    before = time.time() - (Minuten * 60) + 7200
     before = int(before)
     before = (before + 946677638) * 1000
 
     return now,before
 
+# Grafana API abfragen
 def grafana_read(before,now):
     url = 'http://192.168.178.32:2090/api/ds/query'
     headers = {}
@@ -72,27 +72,27 @@ def grafana_read(before,now):
     return data_array
 
 def daten_darstellen(data_array):
-    # Schleife mit allen Werten
     display.fill(0)
     xpos = 10
     ypos = 63
     lastco2 = 0
+    # Schleife mit allen Werten
     for time, co2 in zip(data_array[0], data_array[1]):
         lastypos=ypos
         newypos=63-(63/1600*(int(co2)-400))
         ypos=int(round(newypos,0))
         lastxpos=xpos
-        xpos=xpos+10
+        xpos=xpos+1
         display.line(lastxpos,lastypos,xpos,ypos,1)
         lastco2=co2
 
     display.text("Wohnzimmer",30,0,1)
-    display.text("co2 = {}".format(co2),20,10,1)
+    display.text("co2 = {}".format(lastco2),20,10,1)
     display.show()
 
 while True:
     # Zeiten ermitteln 
-    now,before = unixtime_ermitteln(15)
+    now,before = unixtime_ermitteln(150)
 
     # API abfragen
     data_array = grafana_read(before,now)
